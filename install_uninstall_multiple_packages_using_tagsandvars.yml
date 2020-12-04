@@ -1,0 +1,28 @@
+---
+ - hosts: all
+   become: yes
+   gather_facts: False
+   vars:
+     services:
+       - "git"
+       - "httpd"
+       - "maven"
+   tasks:
+    - name: "Installing git + maven + apache"
+      yum:
+        name: " {{ item }} "
+        state: present
+      with_items: "{{ services }}"
+      tags: install
+      register: describe_service
+    - name: "UnInstalling git + maven + apache"
+      yum:
+        name: " {{ item }} "
+        state: absent
+      with_items: "{{ services }}"
+      tags: uninstall
+    - name: Describe Service
+      debug:
+        msg:
+         - " Describe service: {{ describe_service }} "
+
